@@ -69,7 +69,7 @@ Silicon) and detailed run instructions.
 
 ## LLM usage
 
-I used **Claude Sonnet 3.7 via Cline** (an AI coding assistant in VS Code) to help write
+I used **Claude Sonnet 4.6 via Cline** (an AI coding assistant in VS Code) to help write
 parts of this project.
 
 The way it worked in practice: I designed the pipeline, worked out the approach for each
