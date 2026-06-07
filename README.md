@@ -52,6 +52,14 @@ and config — is the core finding. It's driven by data drift: the model trained
 synthetic phantoms but the cellular tomogram is crowded, lower-contrast, and has a
 different acquisition signature. Task 2c quantifies this; Task 2d proposes the fix.
 
+**Why the model fails — ribosome contrast vs background:**
+
+<img src="Task2/task2c/figures/04_contrast.png" alt="Ribosome contrast vs background: synthetic 2.73× vs in-situ 1.24×" width="100%">
+
+*In the synthetic training data, ribosomes stand out at 2.73× the local background — a clear signal.
+In the real in-situ data, they're only 1.24× above background, buried in dense cytoplasm.
+The model's learned filters never saw this low-contrast regime.*
+
 ### Quick start
 
 See `Task2/README.md` for full setup (including the numcodecs install note for Apple
