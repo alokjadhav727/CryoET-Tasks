@@ -129,16 +129,16 @@ Concretely:
 
 ---
 
-## Practical constraints I'm keeping in mind
+## Practical constraints:
 
 - **Labels are the bottleneck, not compute.** The plan is built to need as few trusted
-  labels as possible - fine-tuning instead of retraining, better synthetic data that needs
+  labels as possible, fine-tuning instead of retraining, better synthetic data that needs
   no labels, and self-training on unlabeled data - precisely because there's no clean
   large-scale real training set.
 - **Don't trust other pickers as truth.** They're fine as a rough starting point for
   pseudo-labels (filtered by confidence and human spot-checks), never as the evaluation
   ground truth.
-- **Keep it incremental.** Each part (fine-tune → better synthetic → self-train → recalibrate)
+- **Keep it incremental.** Each part (fine-tune --> better synthetic --> self-train --> recalibrate)
   can be added one at a time and measured against the held-out set, so we always know which
   change bought which improvement, and we can stop when the gains level off.
 
