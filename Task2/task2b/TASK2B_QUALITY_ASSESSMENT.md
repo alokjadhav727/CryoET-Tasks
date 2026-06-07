@@ -111,19 +111,6 @@ Recall 0.94 · **F1 0.76** · 37 Å localization.
 
 ---
 
-## One honest caveat about the false positives
-
-I don't think the 17 "false positives" are really the model hallucinating. The synthetic
-tomogram contains all six trained particle types, and the model does its job and detects
-the *others* too (ferritin, thyroglobulin, and so on). Several of those are dense globular
-complexes at a similar scale to ribosomes, so a handful bleed into the ribosome channel.
-Because I'm scoring against ribosome-only ground truth, they show up as FPs. A quick
-multi-class check (`evaluate_classes.py`) confirms the other channels fire correctly on
-their own species - so the ribosome **precision here is really a lower bound**, and the
-true picking quality is a bit better than the 0.64 suggests.
-
----
-
 ## Reproduce
 
 ```bash
