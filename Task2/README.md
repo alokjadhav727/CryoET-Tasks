@@ -41,6 +41,8 @@ Task2/
 
 ## Setup
 
+> **First:** `cd Task2` - all commands below assume you're running from inside this folder.
+
 `topcup 1.2.2` pins `numcodecs==0.11.0` internally, which conflicts with `numcodecs 0.12.x`
 that the rest of the stack needs. The install is a two-step process to override that pin.
 
