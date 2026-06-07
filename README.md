@@ -20,7 +20,7 @@ A code review and analysis of a protein fitness Transformer training script.
 
 ## Demo — Task 2b: Synthetic Ribosome Detection
 
-<img src="Task2/task2b/slices_preview.gif" alt="Task 2b demo — TopCUP detections vs ground truth ribosomes" width="100%">
+<img src="Task2/task2b/slices_preview.png" alt="Task 2b demo — TopCUP detections vs ground truth ribosomes" width="100%">
 
 *TopCUP detections (cyan) vs ground-truth ribosomes (red / green = matched) across all 184 slices of the synthetic tomogram. F1 = 0.76, localization error 37 Å.*
 
