@@ -1,0 +1,36 @@
+{
+  "zscored_p1_p99": {
+    "synthetic": [
+      -3.642951250076294,
+      1.6475584506988525
+    ],
+    "in_situ": [
+      -2.4987151622772217,
+      2.3302395343780518
+    ]
+  },
+  "distribution_shape": {
+    "synthetic": {
+      "skew": -2.995204210281372,
+      "kurtosis": 30.38656997680664
+    },
+    "in_situ": {
+      "skew": -0.1282964050769806,
+      "kurtosis": 0.5761051177978516
+    }
+  },
+  "ribosome_vs_background_contrast_ratio": {
+    "synthetic": 2.725937604904175,
+    "in_situ": 1.2410266399383545
+  },
+  "n_ribosomes": {
+    "synthetic": 31,
+    "in_situ": 202
+  },
+  "synthetic_conf_max": 0.99782854,
+  "xz_anisotropy_ratio": {
+    "synthetic": 9.404256820678711,
+    "in_situ": 92.51483154296875,
+    "note": "higher = stronger missing-wedge asymmetry"
+  }
+}
