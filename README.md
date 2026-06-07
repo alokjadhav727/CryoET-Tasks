@@ -6,7 +6,7 @@ This repo contains submissions for the CZ cryoET project tasks.
 
 ## Task 1 — Transformer Training Review
 
-**Folder:** `Task 1/`
+**Folder:** `Task1/`
 
 A code review and analysis of a protein fitness Transformer training script.
 
@@ -20,7 +20,7 @@ A code review and analysis of a protein fitness Transformer training script.
 
 ## Task 2 — CryoET Ribosome Picking with TopCUP
 
-**Folder:** `Task 2/`
+**Folder:** `Task2/`
 
 An end-to-end pipeline that runs the pretrained **TopCUP** particle picker on two CZ
 cryoET Data Portal tomograms and reports a quality assessment.
@@ -47,7 +47,7 @@ different acquisition signature. Task 2c quantifies this; Task 2d proposes the f
 ### Quick start
 
 ```bash
-cd "Task 2"
+cd Task2
 pip install topcup==1.2.2 --no-deps
 pip install -r requirements.txt
 python task2a/download.py         # ~3 GB download
@@ -55,5 +55,5 @@ python task2b/inference.py        # auto-detects CPU/GPU
 python task2c/inference_chlamy.py
 ```
 
-See `Task 2/README.md` for full setup (including the numcodecs install note for Apple
+See `Task2/README.md` for full setup (including the numcodecs install note for Apple
 Silicon) and detailed run instructions.
