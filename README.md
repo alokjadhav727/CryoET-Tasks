@@ -46,14 +46,5 @@ different acquisition signature. Task 2c quantifies this; Task 2d proposes the f
 
 ### Quick start
 
-```bash
-cd Task2
-pip install topcup==1.2.2 --no-deps
-pip install -r requirements.txt
-python task2a/download.py         # ~3 GB download
-python task2b/inference.py        # auto-detects CPU/GPU
-python task2c/inference_chlamy.py
-```
-
 See `Task2/README.md` for full setup (including the numcodecs install note for Apple
 Silicon) and detailed run instructions.
