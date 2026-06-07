@@ -1,8 +1,8 @@
-# TopCUP Cryo-ET Particle Picking — Task 2 Pipeline
+# TopCUP Cryo-ET Particle Picking - Task 2 Pipeline
 
 An end-to-end, reproducible pipeline that runs the pretrained **TopCUP** ribosome
-picker on two CZ cryoET Data Portal tomograms — a **synthetic** (in-distribution)
-volume and a **Chlamydomonas** in-situ volume — and reports a quality assessment.
+picker on two CZ cryoET Data Portal tomograms - a **synthetic** (in-distribution)
+volume and a **Chlamydomonas** in-situ volume - and reports a quality assessment.
 
 Everything is self-contained: the scripts download their own data into `data/` and
 resolve all paths relative to this folder, so the pipeline runs from any machine with no
@@ -44,7 +44,7 @@ submission/
 `topcup 1.2.2` pins `numcodecs==0.11.0` internally, which conflicts with `numcodecs 0.12.x`
 that the rest of the stack needs. The install is a two-step process to override that pin.
 
-**Apple Silicon (M-series Mac) — Python 3.12**
+**Apple Silicon (M-series Mac) - Python 3.12**
 ```bash
 conda create -n topcup python=3.12
 conda activate topcup
@@ -52,7 +52,7 @@ pip install topcup==1.2.2 --no-deps   # install topcup without its strict numcod
 pip install -r requirements.txt        # installs numcodecs 0.12.1 + everything else
 ```
 
-**Linux — Python 3.11**
+**Linux - Python 3.11**
 ```bash
 conda create -n topcup python=3.11
 conda activate topcup
@@ -60,7 +60,7 @@ pip install topcup==1.2.2 --no-deps   # install topcup WITHOUT its strict numcod
 pip install -r requirements.txt        # installs the rest (topcup is not in requirements.txt)
 ```
 
-**Windows — Python 3.11**
+**Windows - Python 3.11**
 
 The pinned `requirements.txt` was generated on Apple Silicon / Python 3.12 and
 several pins (`tifffile==2026.6.1`, `numpy==2.4.6`, `scikit-learn==1.8.0`,
@@ -79,7 +79,7 @@ The relaxed file overrides `numcodecs` to `>=0.12,<0.13` (matching the
 Apple-Silicon override) and only lower-bounds the rest, so pip can pick the
 versions that actually publish Windows + Python 3.11 wheels.
 
-**Windows inference scripts** — the original `task2b/inference.py` and
+**Windows inference scripts** - the original `task2b/inference.py` and
 `task2c/inference_chlamy.py` use `Path.symlink_to()` to wire the copick
 directory layout, which on Windows raises `OSError: [WinError 1314] A required
 privilege is not held by the client` for non-admin users. Drop-in replacements
@@ -129,14 +129,14 @@ python task2c\inference_chlamy_win.py
 ```
 
 Each script writes its outputs (predictions, `metrics_*.json`, visualizations) into its
-own task folder. Re-running is safe — downloads and the extracted chunk are cached.
+own task folder. Re-running is safe - downloads and the extracted chunk are cached.
 
 ## Headline results
 
 | Dataset | Regime | Ribosome F1 | Localization | Notes |
 |---|---|---|---|---|
 | CZII synthetic (run 16463) | in-distribution | **0.76** (R=0.94) | **37 Å** | 30/32 GT found |
-| Chlamydomonas chunk (run 14070) | in-situ, held-out | **0.00** | — | 0 confident detections vs 56 GT |
+| Chlamydomonas chunk (run 14070) | in-situ, held-out | **0.00** | - | 0 confident detections vs 56 GT |
 
 The synthetic result validates the pipeline and characterizes TopCUP's in-distribution
 ceiling; the Chlamydomonas chunk demonstrates the in-distribution → in-situ
@@ -150,11 +150,11 @@ write-up (hyperparameters + metrics).
    (`--gpus 1`, only a `torch.load(weights_only=False)` PyTorch-2.6 compat fix); on CPU
    it additionally patches Lightning→CPU, no-ops `.cuda()`/`.to('cuda')`, and disables
    CUDA autocast. One script, both devices. (MPS/Apple-Silicon is intentionally not
-   implemented — the task states it is not evaluated.)
+   implemented - the task states it is not evaluated.)
 
-2. **The model is 6-class — the config must say so.** `topcup_phantom_24_tomograms.ckpt`
+2. **The model is 6-class - the config must say so.** `topcup_phantom_24_tomograms.ckpt`
    outputs 6 particle channels in training-label order (apo-ferritin=1, beta-amylase=2,
    beta-galactosidase=3, **ribosome=4**, thyroglobulin=5, virus-like-particle=6). The
    copick config replicates all six so "ribosome" reads **channel 4**. A single-object
    config (`ribosome: label 1`) would silently read channel 1 (apo-ferritin) and
-   mislabel it — producing all false positives. This was the key correctness fix.
+   mislabel it - producing all false positives. This was the key correctness fix.
