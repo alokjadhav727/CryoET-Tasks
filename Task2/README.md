@@ -6,7 +6,7 @@ volume and a **Chlamydomonas** in-situ volume — and reports a quality assessme
 
 Everything is self-contained: the scripts download their own data into `data/` and
 resolve all paths relative to this folder, so the pipeline runs from any machine with no
-edits. It works on **CPU or NVIDIA GPU** (auto-detected).
+edits. It works on **CPU or NVIDIA GPU**.
 
 ## Layout
 
