@@ -1,0 +1,55 @@
+# HHMI Task 2 — Python environment
+#
+# ⚠️  INSTALL NOTE — numcodecs conflict
+# topcup 1.2.2 declares numcodecs==0.11.0 as a dependency, which conflicts with
+# other packages on Python 3.12. Per the TopCUP environment guidance:
+#
+#   Apple Silicon (M-series Mac):   Python 3.12 + numcodecs overridden to >=0.12,<0.13
+#   Linux / Windows:                Python 3.11  (no override needed)
+#
+# Install with the two-step approach to bypass pip's strict dep resolution:
+#   pip install topcup==1.2.2 --no-deps   # install topcup WITHOUT its dep pins
+#   pip install -r requirements.txt        # installs numcodecs 0.12.1 + everything else
+#   (topcup is intentionally NOT listed below so pip doesn't re-evaluate its deps)
+#
+# Notes:
+#   - torch here is the CPU/MPS build; on NVIDIA install the CUDA-matched wheel instead.
+#   - The inference scripts patch torch at runtime for CPU; no extra packages needed.
+
+# --- Core model / pipeline ---
+# topcup==1.2.2 is installed SEPARATELY with --no-deps (see install note above).
+# albumentations, opencv-python, timm are topcup's training-only deps — not needed
+# for inference and excluded here to avoid a numpy version conflict.
+torch==2.12.0
+torchvision==0.27.0
+pytorch-lightning==2.6.5
+lightning==2.6.5
+monai==1.5.2
+
+# --- Download / model weights ---
+huggingface-hub>=0.20        # hf_hub_download used in task2a/download.py
+
+# --- CryoET data access (copick + CZ data portal) ---
+copick==1.24.0
+cryoet-data-portal==4.8.0
+ome-zarr==0.11.1
+zarr==2.18.2
+numcodecs==0.12.1          # Apple Silicon override (topcup pins 0.11.0 but 0.12.x works)
+fsspec==2026.4.0
+s3fs==2026.4.0
+
+# --- Scientific stack ---
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.3
+scikit-image==0.26.0
+scikit-learn==1.8.0
+einops==0.8.2
+tifffile==2026.6.1
+
+# --- Visualization ---
+matplotlib==3.10.9
+
+# --- CLI / utils ---
+click==8.4.1
+tqdm==4.67.3
