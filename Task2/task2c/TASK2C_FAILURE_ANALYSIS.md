@@ -114,10 +114,6 @@ The diagnosis points straight at the fixes (the lead-in to Task 2d):
 ## 5. Reproduce
 
 ```bash
-cd submission/task2c
-python inference_chlamy.py     # extracts the chunk, runs inference, prints the metrics table
-                               # writes results/metrics_2c.json
+python inference_chlamy.py    # extracts the chunk, runs inference, writes results/metrics_2c.json
+python analyze_drift.py       # generates drift figures in figures/ + drift_stats.json
 ```
-
-The heatmap and dataset-comparison figures referenced above are produced by our analysis
-scripts (`data_drift/analyze_drift.py` and the `task2c` visualization tooling).

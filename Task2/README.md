@@ -11,7 +11,7 @@ edits. It works on **CPU or NVIDIA GPU**.
 ## Layout
 
 ```
-submission/
+Task2/
 ├── README.md
 ├── requirements.txt
 ├── requirements_win_py311.txt    # relaxed pins for Windows + Python 3.11
@@ -32,7 +32,7 @@ submission/
 ├── task2c/   Inference on the CHLAMYDOMONAS in-situ chunk (held-out)
 │   ├── inference_chlamy.py       # extract chunk + inference + metrics (Mac/Linux)
 │   ├── inference_chlamy_win.py   # Windows drop-in (uses junctions instead of symlinks)
-│   ├── analyze_drift.py          # train-vs-test data-drift comparison → figures/ + drift_stats.json
+│   ├── analyze_drift.py          # train-vs-test data-drift comparison -> figures/ + drift_stats.json
 │   └── TASK2C_FAILURE_ANALYSIS.md  # where/why the model fails + dataset differences (data drift)
 │
 └── task2d/   Proposal: improving in-situ performance
@@ -139,7 +139,7 @@ own task folder. Re-running is safe - downloads and the extracted chunk are cach
 | Chlamydomonas chunk (run 14070) | in-situ, held-out | **0.00** | - | 0 confident detections vs 56 GT |
 
 The synthetic result validates the pipeline and characterizes TopCUP's in-distribution
-ceiling; the Chlamydomonas chunk demonstrates the in-distribution → in-situ
+ceiling; the Chlamydomonas chunk demonstrates the in-distribution -> in-situ
 generalization gap. See `task2b/TASK2B_QUALITY_ASSESSMENT.md` for the full Task 2b
 write-up (hyperparameters + metrics).
 
@@ -148,7 +148,7 @@ write-up (hyperparameters + metrics).
 1. **Device-agnostic by design.** TopCUP is hard-coded for NVIDIA GPU. Each
    `inference.py` checks `torch.cuda.is_available()`: on GPU it runs natively
    (`--gpus 1`, only a `torch.load(weights_only=False)` PyTorch-2.6 compat fix); on CPU
-   it additionally patches Lightning→CPU, no-ops `.cuda()`/`.to('cuda')`, and disables
+   it additionally patches Lightning->CPU, no-ops `.cuda()`/`.to('cuda')`, and disables
    CUDA autocast. One script, both devices. (MPS/Apple-Silicon is intentionally not
    implemented - the task states it is not evaluated.)
 
