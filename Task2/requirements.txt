@@ -1,6 +1,6 @@
 # HHMI Task 2 — Python environment
 #
-# ⚠️  INSTALL NOTE — numcodecs conflict
+#  INSTALL NOTE — numcodecs conflict
 # topcup 1.2.2 declares numcodecs==0.11.0 as a dependency, which conflicts with
 # other packages on Python 3.12. Per the TopCUP environment guidance:
 #
