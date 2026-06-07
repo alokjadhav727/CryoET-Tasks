@@ -25,12 +25,12 @@ Task2/
 │   └── visualize.py              # per-slice raw | annotated overlays
 │
 ├── task2b/   Inference + quality assessment on SYNTHETIC (in-distribution)
-│   ├── inference.py              # device-agnostic TopCUP inference + metrics (Mac/Linux)
+│   ├── inference.py              # device-agnostic TopCUP inference + metrics (Mac)
 │   ├── inference_win.py          # Windows drop-in (uses junctions instead of symlinks)
 │   └── TASK2B_QUALITY_ASSESSMENT.md   # hyperparameter choices + detection/localization analysis
 │
 ├── task2c/   Inference on the CHLAMYDOMONAS in-situ chunk (held-out)
-│   ├── inference_chlamy.py       # extract chunk + inference + metrics (Mac/Linux)
+│   ├── inference_chlamy.py       # extract chunk + inference + metrics (Mac)
 │   ├── inference_chlamy_win.py   # Windows drop-in (uses junctions instead of symlinks)
 │   ├── analyze_drift.py          # train-vs-test data-drift comparison -> figures/ + drift_stats.json
 │   └── TASK2C_FAILURE_ANALYSIS.md  # where/why the model fails + dataset differences (data drift)
@@ -52,14 +52,6 @@ conda create -n topcup python=3.12
 conda activate topcup
 pip install topcup==1.2.2 --no-deps   # install topcup without its strict numcodecs pin
 pip install -r requirements.txt        # installs numcodecs 0.12.1 + everything else
-```
-
-**Linux - Python 3.11**
-```bash
-conda create -n topcup python=3.11
-conda activate topcup
-pip install topcup==1.2.2 --no-deps   # install topcup WITHOUT its strict numcodecs pin
-pip install -r requirements.txt        # installs the rest (topcup is not in requirements.txt)
 ```
 
 **Windows - Python 3.11**
@@ -103,7 +95,7 @@ wheel after; the inference scripts auto-detect the GPU.
 
 ## Run the whole pipeline
 
-**Mac / Linux**
+**Mac**
 ```bash
 # 1. Download tomograms, ribosome annotations, and TopCUP weights into ./data
 python task2a/download.py
