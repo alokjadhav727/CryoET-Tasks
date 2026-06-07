@@ -14,6 +14,7 @@ edits. It works on **CPU or NVIDIA GPU** (auto-detected).
 submission/
 ├── README.md
 ├── requirements.txt
+├── requirements_win_py311.txt    # relaxed pins for Windows + Python 3.11
 ├── data/                         # created by task2a/download.py (git-ignored)
 │   ├── synthetic/{tomograms,overlay}
 │   ├── chlamydomonas/{tomograms,overlay}
@@ -24,11 +25,13 @@ submission/
 │   └── visualize.py              # per-slice raw | annotated overlays
 │
 ├── task2b/   Inference + quality assessment on SYNTHETIC (in-distribution)
-│   ├── inference.py              # device-agnostic TopCUP inference + metrics
+│   ├── inference.py              # device-agnostic TopCUP inference + metrics (Mac/Linux)
+│   ├── inference_win.py          # Windows drop-in (uses junctions instead of symlinks)
 │   └── TASK2B_QUALITY_ASSESSMENT.md   # hyperparameter choices + detection/localization analysis
 │
 ├── task2c/   Inference on the CHLAMYDOMONAS in-situ chunk (held-out)
-│   ├── inference_chlamy.py       # extract chunk + inference + metrics
+│   ├── inference_chlamy.py       # extract chunk + inference + metrics (Mac/Linux)
+│   ├── inference_chlamy_win.py   # Windows drop-in (uses junctions instead of symlinks)
 │   ├── analyze_drift.py          # train-vs-test data-drift comparison → figures/ + drift_stats.json
 │   └── TASK2C_FAILURE_ANALYSIS.md  # where/why the model fails + dataset differences (data drift)
 │
@@ -49,13 +52,48 @@ pip install topcup==1.2.2 --no-deps   # install topcup without its strict numcod
 pip install -r requirements.txt        # installs numcodecs 0.12.1 + everything else
 ```
 
-**Linux / Windows — Python 3.11**
+**Linux — Python 3.11**
 ```bash
 conda create -n topcup python=3.11
 conda activate topcup
 pip install topcup==1.2.2 --no-deps   # install topcup WITHOUT its strict numcodecs pin
 pip install -r requirements.txt        # installs the rest (topcup is not in requirements.txt)
 ```
+
+**Windows — Python 3.11**
+
+The pinned `requirements.txt` was generated on Apple Silicon / Python 3.12 and
+several pins (`tifffile==2026.6.1`, `numpy==2.4.6`, `scikit-learn==1.8.0`,
+`torch==2.12.0`, ...) have no cp311/Windows wheels. On Windows, install topcup
+**with** its dependencies and then use the relaxed companion file
+`requirements_win_py311.txt`:
+
+```powershell
+conda create -n topcup python=3.11
+conda activate topcup
+pip install topcup==1.2.2                       # install topcup + compatible deps
+pip install -r requirements_win_py311.txt       # relaxed pins that have cp311 wheels
+```
+
+The relaxed file overrides `numcodecs` to `>=0.12,<0.13` (matching the
+Apple-Silicon override) and only lower-bounds the rest, so pip can pick the
+versions that actually publish Windows + Python 3.11 wheels.
+
+**Windows inference scripts** — the original `task2b/inference.py` and
+`task2c/inference_chlamy.py` use `Path.symlink_to()` to wire the copick
+directory layout, which on Windows raises `OSError: [WinError 1314] A required
+privilege is not held by the client` for non-admin users. Drop-in replacements
+that use a Windows directory **junction** (`mklink /J`, no admin required) are
+provided next to them:
+
+- `task2b/inference_win.py`
+- `task2c/inference_chlamy_win.py`
+
+On Windows, run those instead of `inference.py` / `inference_chlamy.py` in the
+"Run the whole pipeline" section below. Everything else (config, inference,
+metrics) is byte-identical.
+
+
 
 `requirements.txt` pins the exact versions used to produce these results (TopCUP 1.2.2,
 torch 2.12, copick 1.24, etc.). On an NVIDIA machine, install the CUDA-matched `torch`

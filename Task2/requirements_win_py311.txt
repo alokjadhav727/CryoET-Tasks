@@ -1,0 +1,47 @@
+# Windows / Python 3.11 friendly requirements for HHMI Task 2.
+#
+# The original requirements.txt was pinned to versions that only exist as
+# Python 3.12 wheels (e.g. tifffile==2026.6.1, numpy==2.4.6, scikit-learn==1.8.0,
+# torch==2.12.0). On Windows + Python 3.11 we relax the pins to the newest
+# versions that actually publish cp311 wheels.
+#
+# topcup==1.2.2 is installed separately (it already pulled compatible versions
+# of torch/torchvision/numcodecs/numpy/scikit-learn/etc.). This file only fills
+# in what isn't already there or upgrades where needed.
+
+# --- Core model / pipeline (relaxed) ---
+torch>=2.4,<2.6
+torchvision>=0.19,<0.21
+pytorch-lightning>=2.4
+lightning>=2.4
+monai>=1.4
+
+# --- Download / model weights ---
+huggingface-hub>=0.20
+
+# --- CryoET data access ---
+copick>=1.24
+cryoet-data-portal>=4.8
+ome-zarr>=0.11
+zarr>=2.18,<3
+# Override topcup's strict numcodecs==0.11 pin to a version that plays nicely
+# with the rest of the stack.
+numcodecs>=0.12,<0.13
+fsspec>=2024.5
+s3fs>=2024.5
+
+# --- Scientific stack ---
+numpy>=2,<2.3
+scipy>=1.13
+pandas>=2.2
+scikit-image>=0.24
+scikit-learn>=1.5
+einops>=0.8
+tifffile>=2024.5
+
+# --- Visualization ---
+matplotlib>=3.8
+
+# --- CLI / utils ---
+click>=8.1
+tqdm>=4.66
