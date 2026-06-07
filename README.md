@@ -38,7 +38,7 @@ cryoET Data Portal tomograms and reports a quality assessment.
 | **2a** - Download + visualize | Fetches tomograms, ribosome annotations, and model weights via the CZ data portal |
 | **2b** - Inference on synthetic data | Runs TopCUP on an in-distribution synthetic tomogram; F1 = 0.76, localization 37 Å |
 | **2c** - In-situ failure analysis | Runs the same model on real Chlamydomonas cellular data; diagnoses why it produces 0 detections (data drift) |
-| **2d** - Improvement proposal | Technical plan to close the train→test distribution gap and restore in-situ performance |
+| **2d** - Improvement proposal | Technical plan to close the train-to-test distribution gap and restore in-situ performance |
 
 ### Key result
 
@@ -64,3 +64,27 @@ The model's learned filters never saw this low-contrast regime.*
 
 See `Task2/README.md` for full setup (including the numcodecs install note for Apple
 Silicon) and detailed run instructions.
+
+---
+
+## LLM usage
+
+I used **Claude Sonnet 3.7 via Cline** (an AI coding assistant in VS Code) to help write
+parts of this project.
+
+The way it worked in practice: I designed the pipeline, worked out the approach for each
+task, and planned what each script needed to do. I then used Claude to help turn those plans
+into code faster than writing it by hand. It was useful for boilerplate-heavy parts like
+the CPU patch wrapper and the data-drift analysis script, and for first drafts of the
+markdown write-ups.
+
+The parts that actually mattered I worked out myself through debugging - finding why the
+copick VoxelSpacing directory format was wrong, tracing why predictions were all false
+positives (the model was reading the apo-ferritin channel, not ribosome), working out the
+correct coordinate convention, identifying that the 6-class config was the key fix. These
+were not things the model suggested; they came from reading the error messages and checking
+the data.
+
+I verified all outputs by running the scripts end-to-end, checking numbers against the
+portal ground truth, and fixing several bugs in the generated code (wrong relative paths,
+the Windows symlink issue, the APNG color loss from mp4 chroma subsampling).
