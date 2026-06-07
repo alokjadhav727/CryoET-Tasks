@@ -101,6 +101,7 @@ wheel after; the inference scripts auto-detect the GPU.
 
 ## Run the whole pipeline
 
+**Mac / Linux**
 ```bash
 # 1. Download tomograms, ribosome annotations, and TopCUP weights into ./data
 python task2a/download.py
@@ -111,6 +112,20 @@ python task2b/inference.py                 # auto-detects CPU/GPU; prints metric
 
 # 3. Inference on the held-out Chlamydomonas in-situ chunk
 python task2c/inference_chlamy.py
+```
+
+**Windows**
+```powershell
+# 1. Download tomograms, ribosome annotations, and TopCUP weights into ./data
+python task2a\download.py
+python task2a\visualize.py                 # optional: per-slice overlays
+
+# 2. Inference + quality assessment on the synthetic (in-distribution) tomogram
+#    inference_win.py uses Windows directory junctions instead of symlinks (no admin required)
+python task2b\inference_win.py             # auto-detects CPU/GPU; prints metrics + radius sweep
+
+# 3. Inference on the held-out Chlamydomonas in-situ chunk
+python task2c\inference_chlamy_win.py
 ```
 
 Each script writes its outputs (predictions, `metrics_*.json`, visualizations) into its
