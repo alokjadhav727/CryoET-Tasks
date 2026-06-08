@@ -137,16 +137,10 @@ ceiling; the Chlamydomonas chunk demonstrates the in-distribution -> in-situ
 generalization gap. See `task2b/TASK2B_QUALITY_ASSESSMENT.md` for the full Task 2b
 write-up (hyperparameters + metrics).
 
-## Two implementation notes that matter
+## Implementation notes that matter
 
-1. **Device-agnostic by design.** TopCUP is hard-coded for NVIDIA GPU. Each
-   `inference.py` checks `torch.cuda.is_available()`: on GPU it runs natively
-   (`--gpus 1`, only a `torch.load(weights_only=False)` PyTorch-2.6 compat fix); on CPU
-   it additionally patches Lightning->CPU, no-ops `.cuda()`/`.to('cuda')`, and disables
-   CUDA autocast. One script, both devices. (MPS/Apple-Silicon is intentionally not
-   implemented - the task states it is not evaluated.)
 
-2. **The model is 6-class - the config must say so.** `topcup_phantom_24_tomograms.ckpt`
+**The model is 6-class - the config must say so.** `topcup_phantom_24_tomograms.ckpt`
    outputs 6 particle channels in training-label order (apo-ferritin=1, beta-amylase=2,
    beta-galactosidase=3, **ribosome=4**, thyroglobulin=5, virus-like-particle=6). The
    copick config replicates all six so "ribosome" reads **channel 4**. A single-object
