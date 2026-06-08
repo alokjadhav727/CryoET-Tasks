@@ -7,8 +7,8 @@
 
 ## 1. Hyperparameters
 
-**Confidence threshold: 0.19**
-The model ships its own per-class threshold (0.19 for ribosome), tuned during training. Using the model's own threshold rather than an arbitrary value like 0.5 is the right thing to do here.
+**Confidence threshold: 0.19 (model default)**
+The model ships its own per-class threshold (0.19 for ribosome), tuned during training on a multi-class, crowded validation set. This is the correct starting point for an in-distribution evaluation. The threshold sweep below shows that on this specific clean synthetic dataset, a higher threshold (0.50) actually gives better F1 (0.817 vs 0.759) by cutting false positives without losing many true positives - because all ribosome predictions already score >= 0.229. The model's threshold is conservative by design; it was tuned for harder data.
 
 **Matching radius: 15 voxels (150 Å) = one ribosome radius**
 A pick is a true positive if it falls within this distance of a ground-truth ribosome. One ribosome radius is a physically meaningful boundary - a pick inside it unambiguously belongs to that ribosome. A radius sweep is reported below to show results are not sensitive to this choice.
