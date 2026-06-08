@@ -53,6 +53,22 @@ Recall is 0.94 at the tightest radius and barely changes as it loosens. The pick
 
 **Best hyperparameter set:** threshold 0.19, radius 15 vox (150 Å), tomo_type `denoised`, TopCUP default tiling, full 6-class config.
 
+**Threshold sweep**
+
+All 47 ribosome predictions already have confidence >= 0.229, so thresholds below that are equivalent. Higher thresholds trim false positives while keeping most true positives:
+
+| Threshold | TP | FP | FN | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|
+| 0.05 - 0.19 (identical) | 30 | 17 | 2 | 0.638 | 0.938 | 0.759 |
+| 0.25 | 30 | 16 | 2 | 0.652 | 0.938 | 0.769 |
+| 0.30 | 30 | 16 | 2 | 0.652 | 0.938 | 0.769 |
+| 0.40 | 29 | 14 | 3 | 0.674 | 0.906 | 0.773 |
+| **0.50** | **29** | **10** | **3** | **0.744** | **0.906** | **0.817** |
+
+The model's own threshold (0.19) was tuned on crowded multi-class validation data where ribosomes score lower. On this clean synthetic dataset every prediction is already quite confident, so a higher threshold cleanly removes uncertain false positives. At 0.50 we lose 1 true positive but drop 7 false positives, improving F1 from 0.76 to 0.82.
+
+The localization error stays at 37 Å across all thresholds - the model consistently places its picks in the right spot.
+
 ---
 
 ## 3. A note on false positives
