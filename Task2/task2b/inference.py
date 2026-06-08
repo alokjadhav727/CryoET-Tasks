@@ -2,7 +2,6 @@
 Task 2b — TopCUP inference on the synthetic tomogram + quality metrics.
 
 Self-contained: reads data from submission/data (populated by task2a/download.py),
-writes results next to this script. Device-agnostic — runs on CPU or NVIDIA GPU.
 
 Hyperparameters (see TASK2B_QUALITY_ASSESSMENT.md for justification):
   RADIUS          = 15 vox (150 Å)  — one ribosome radius; CZII matching criterion
