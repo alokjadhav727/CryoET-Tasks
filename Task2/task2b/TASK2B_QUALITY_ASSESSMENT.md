@@ -30,11 +30,22 @@ The checkpoint is a 6-class model with output channels in training order: apo-fe
 
 | Metric | Value |
 |---|---|
+| Predictions | 47 |
+| Ground-truth ribosomes | 31 |
+| True positives | 30 |
+| False positives | 17 |
+| False negatives (missed) | 2 |
 | Precision | 0.64 |
 | Recall | **0.94** |
 | F1 | **0.76** |
 
-Recall (0.94) is the priority metric for particle picking. Missing a real ribosome loses it permanently and biases any downstream analysis. The model finds 30 of 32 ribosomes, missing only 2.
+The model outputs **47 ribosome predictions** against **31 ground-truth ribosomes**. Scoring each prediction against the ground truth at the 15-vox radius gives TP=30, FP=17, FN=2:
+- Precision = TP / (TP + FP) = 30 / 47 = **0.64**
+- Recall = TP / (TP + FN) = 30 / 32 = **0.94**
+
+(TP counts predictions that land within radius of a real ribosome, while FN counts real ribosomes with no prediction nearby. TP + FN = 32 slightly exceeds the 31 ground-truth ribosomes because two predictions fall near the same ribosome - the matching is not forced one-to-one. The effect on the metric is negligible.)
+
+Recall is the priority metric for particle picking: missing a real ribosome loses it permanently and biases any downstream analysis, whereas a false positive can be cleaned up later by classification.
 
 **Localization**
 
