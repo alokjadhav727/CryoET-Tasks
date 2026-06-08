@@ -83,9 +83,7 @@ def make_copick_config():
 
 def run_inference(cfg, out_dir):
     """
-    Device-agnostic: the SAME script runs on CPU or NVIDIA GPU.
-      - GPU present: TopCUP runs natively (--gpus 1); only torch.load weights_only fix.
-      - No GPU (CPU): also patches Lightning→CPU, no-ops .cuda()/.to(cuda), disables CUDA autocast.
+      - No GPU (CPU): patches Lightning→CPU, no-ops .cuda()/.to(cuda), disables CUDA autocast.
     """
     out_dir.mkdir(parents=True, exist_ok=True)
     wrapper = out_dir / "_wrapper.py"
