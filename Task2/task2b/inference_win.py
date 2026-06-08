@@ -218,6 +218,16 @@ def load_predictions(out_dir):
     return coords
 
 
+def load_predictions_df(out_dir):
+    """Load all ribosome predictions with confidence scores for post-hoc threshold sweeps."""
+    import pandas as pd
+    csvs = list(out_dir.glob("*.csv"))
+    if not csvs:
+        return pd.DataFrame(columns=["z", "y", "x", "conf"])
+    df = pd.concat([pd.read_csv(f) for f in csvs])
+    return df[df["particle_type"] == "ribosome"].reset_index(drop=True)
+
+
 def load_ground_truth():
     with open(DATA_DIR / "synthetic/overlay/ribosome_annotations_synthetic.json") as f:
         d = json.load(f)
@@ -278,6 +288,26 @@ if __name__ == "__main__":
             re = tp/(tp+fn) if tp+fn else 0
             f1 = 2*pr*re/(pr+re) if pr+re else 0
             print(f"   r={r:2d} vox ({r*VS:.0f} A): TP={tp} FP={fp} FN={fn}  P={pr:.2f} R={re:.2f} F1={f1:.2f}")
+
+    print("\n   Threshold sweep (fixed radius=15 vox, varying confidence cutoff):")
+    ribo_df = load_predictions_df(out_dir)
+    if len(ribo_df) and len(gt):
+        print(f"   {'Threshold':>10} {'TP':>4} {'FP':>4} {'FN':>4}  {'Prec':>6} {'Rec':>6} {'F1':>6}  Loc(A)")
+        for t in [0.05, 0.10, 0.15, 0.19, 0.25, 0.30, 0.40, 0.50]:
+            picks = ribo_df[ribo_df["conf"] >= t]
+            if len(picks) == 0:
+                print(f"   {t:>10.2f}  {'0':>4} {'--':>4} {len(gt):>4}  {'0.000':>6} {'0.000':>6} {'0.000':>6}  -")
+                continue
+            p = np.column_stack([picks["z"]/VS, picks["y"]/VS, picks["x"]/VS])
+            Dt = cdist(p, gt)
+            tp_p = np.min(Dt, axis=1) < RADIUS
+            tp_g = np.min(Dt, axis=0) < RADIUS
+            TP = int(tp_p.sum()); FP = int((~tp_p).sum()); FN = int((~tp_g).sum())
+            pr = TP/(TP+FP) if TP+FP else 0
+            re = TP/(TP+FN) if TP+FN else 0
+            f1 = 2*pr*re/(pr+re) if pr+re else 0
+            loc = float(np.mean(np.min(Dt, axis=1)[tp_p])) * VS if TP else float("inf")
+            print(f"   {t:>10.2f}  {TP:>4} {FP:>4} {FN:>4}  {pr:>6.3f} {re:>6.3f} {f1:>6.3f}  {loc:.0f}")
 
     json.dump(m, open(RESULTS / "metrics_2b.json", "w"), indent=2)
     print(f"\nSaved to {RESULTS / 'metrics_2b.json'}")
