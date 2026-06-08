@@ -2,7 +2,7 @@
 Task 2c — TopCUP inference on a Chlamydomonas in-situ chunk + metrics.
 
 Self-contained: reads data from submission/data (populated by task2a/download.py),
-writes results/chunk_data next to this script. Device-agnostic (CPU or NVIDIA GPU).
+writes results/chunk_data next to this script. 
 
 Chunk (task spec): x_offset=160, y_offset=752, size=256 in x and y, full z.
 Contains 56 of the 202 ground-truth ribosomes.
