@@ -29,8 +29,9 @@ numbers are directly comparable and any difference comes from the data, not the 
 | F1 | **0.76** | **0.00** |
 | Localization error | 37 Å | - (nothing to match) |
 
-Same model, same settings - and it goes from finding 30 of 32 ribosomes to finding none of
-56. So the question isn't "is it a bit worse," it's "why does it switch off entirely."
+Same model, same settings - and it goes from finding 30 of 31 ribosomes on synthetic to
+finding none of 56 here. So the question isn't "is it a bit worse," it's "why does it
+switch off entirely."
 
 ---
 
@@ -47,11 +48,10 @@ empty list is the model's honest answer, not a plumbing problem.
 **The model's confidence collapses.** Instead of the final picks, I looked at the model's
 raw per-voxel ribosome score (its heatmap) across the chunk. On the synthetic data the
 model is very confident - its scores reach **0.998** on real ribosomes. On the held-out
-chunk the scores are basically flat: the single highest voxel only reaches **~0.52**, and
-almost everything else is **below 0.05**. If I drop the threshold all the way to zero, the
-strongest detections still only score around **0.008 - about 125× lower than on synthetic
-data.** The model isn't hovering just under the cutoff; it's confidently saying "nothing
-here" everywhere.
+chunk the scores are basically flat: even the strongest voxel anywhere in the chunk only
+reaches about **0.008 - roughly 125× lower than on synthetic data** - which is far below
+the 0.19 detection threshold. That's why zero detections clear the bar. The model isn't
+hovering just under the cutoff; it's confidently saying "nothing here" everywhere.
 
 **And the weak responses don't point at ribosomes anyway.** Even with the threshold at
 zero, the handful of near-zero blips don't line up with the real ribosomes - most

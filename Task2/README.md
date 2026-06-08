@@ -129,7 +129,7 @@ own task folder. Re-running is safe - downloads and the extracted chunk are cach
 
 | Dataset | Regime | Ribosome F1 | Localization | Notes |
 |---|---|---|---|---|
-| CZII synthetic (run 16463) | in-distribution | **0.76** (R=0.94) | **37 Å** | 30/32 GT found |
+| CZII synthetic (run 16463) | in-distribution | **0.76** (R=0.94) | **37 Å** | 30/31 GT found (TP=30, FP=17, FN=2) |
 | Chlamydomonas chunk (run 14070) | in-situ, held-out | **0.00** | - | 0 confident detections vs 56 GT |
 
 The synthetic result validates the pipeline and characterizes TopCUP's in-distribution
