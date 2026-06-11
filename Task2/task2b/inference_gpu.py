@@ -9,8 +9,14 @@ the portable inference.py carries. What remains:
   - the torch.load(weights_only=False) checkpoint compat fix (needed on GPU too,
     PyTorch >=2.6)
   - a hard GPU assertion so the script fails fast instead of mis-running
-  - a subprocess return-code check so inference failures are loud
   - the copick config, metrics, and the radius + threshold sweeps (unchanged)
+
+No subprocess wrapper: the portable inference.py spawns a child process so it can
+apply the CPU monkey-patches in a clean interpreter before torch imports. With the
+CPU layer gone there is nothing to patch, so TopCUP's CLI is called in-process here.
+This assumes Linux-style `fork` DataLoader workers (the cluster default); they share
+memory with the parent and do NOT re-import this module, so the guard re-run problem
+the wrapper avoided does not apply.
 
 Hyperparameters (see TASK2B_QUALITY_ASSESSMENT.md for justification):
   RADIUS          = 15 vox (150 Å)  — one ribosome radius; CZII matching criterion
@@ -20,7 +26,6 @@ Hyperparameters (see TASK2B_QUALITY_ASSESSMENT.md for justification):
 """
 
 import json
-import subprocess
 import sys
 import numpy as np
 from pathlib import Path
@@ -90,38 +95,39 @@ def make_copick_config():
 
 
 def run_inference(cfg, out_dir):
-    """Run TopCUP inference natively on GPU (no CPU fallback)."""
+    """
+    Run TopCUP inference natively on GPU, in-process (no subprocess wrapper).
+
+    TopCUP's CLI reads its arguments from sys.argv, so we set them directly and call
+    cli(standalone_mode=False) — standalone_mode=False stops click from calling
+    sys.exit() on completion, which would otherwise kill this script before metrics.
+    """
+    import torch
     out_dir.mkdir(parents=True, exist_ok=True)
-    wrapper = out_dir / "_wrapper.py"
-    wrapper.write_text(f"""\
-import torch
 
-# PyTorch >=2.6 defaults torch.load to weights_only=True, which rejects this older
-# checkpoint. Override it. (Required on GPU too — not a CPU-specific workaround.)
-_orig_load = torch.load
-torch.load = lambda *a, **kw: _orig_load(*a, **{{**kw, 'weights_only': False}})
+    # PyTorch >=2.6 defaults torch.load to weights_only=True, which rejects this older
+    # checkpoint. Override it. (Required on GPU too — not a CPU-specific workaround.)
+    _orig_load = torch.load
+    torch.load = lambda *a, **kw: _orig_load(*a, **{**kw, "weights_only": False})
 
-import sys
-sys.argv = [
-    'topcup', 'inference',
-    '--copick_config',      '{cfg}',
-    '--run_names',          '{RUN_NAME}',
-    '--pretrained_weights', '{CKPT.resolve()}',
-    '--pixelsize',          '{VS}',
-    '--tomo_type',          'denoised',
-    '--user_id',            'topcup',
-    '--output_dir',         '{out_dir.resolve()}',
-    '--gpus',               '1',
-    '--has_ground_truth',   'False',
-]
-from topcup.cli.cli import cli
-if __name__ == '__main__':      # required: DataLoader workers re-import this module
-    cli(standalone_mode=True)
-""")
+    sys.argv = [
+        "topcup", "inference",
+        "--copick_config",      str(cfg),
+        "--run_names",          RUN_NAME,
+        "--pretrained_weights", str(CKPT.resolve()),
+        "--pixelsize",          str(VS),
+        "--tomo_type",          "denoised",
+        "--user_id",            "topcup",
+        "--output_dir",         str(out_dir.resolve()),
+        "--gpus",               "1",
+        "--has_ground_truth",   "False",
+    ]
     print("  Running TopCUP on GPU...")
-    result = subprocess.run([sys.executable, str(wrapper)])
-    if result.returncode != 0:
-        raise RuntimeError(f"TopCUP inference failed (exit code {result.returncode})")
+    try:
+        from topcup.cli.cli import cli
+        cli(standalone_mode=False)
+    finally:
+        torch.load = _orig_load   # restore, so the metrics code below is unaffected
 
 
 def load_predictions(out_dir):
