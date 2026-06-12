@@ -25,13 +25,15 @@ Task2/
 │   └── visualize.py              # per-slice raw | annotated overlays
 │
 ├── task2b/   Inference + quality assessment on SYNTHETIC (in-distribution)
-│   ├── inference.py              # device-agnostic TopCUP inference + metrics (Mac)
+│   ├── inference.py              # device-agnostic TopCUP inference + metrics (Mac/CPU or GPU)
 │   ├── inference_win.py          # Windows drop-in (uses junctions instead of symlinks)
+│   ├── inference_gpu.py          # lean GPU-only variant (no CPU layer, in-process call)
 │   └── TASK2B_QUALITY_ASSESSMENT.md   # hyperparameter choices + detection/localization analysis
 │
 ├── task2c/   Inference on the CHLAMYDOMONAS in-situ chunk (held-out)
-│   ├── inference_chlamy.py       # extract chunk + inference + metrics (Mac)
+│   ├── inference_chlamy.py       # extract chunk + inference + metrics (Mac/CPU or GPU)
 │   ├── inference_chlamy_win.py   # Windows drop-in (uses junctions instead of symlinks)
+│   ├── inference_chlamy_gpu.py   # lean GPU-only variant (no CPU layer, in-process call)
 │   ├── analyze_drift.py          # train-vs-test data-drift comparison -> figures/ + drift_stats.json
 │   └── TASK2C_FAILURE_ANALYSIS.md  # where/why the model fails + dataset differences (data drift)
 │
